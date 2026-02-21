@@ -2,38 +2,174 @@
   "version": 2.0,
   "questions": [
     {
-      "question": "This is a Sample Question 1?",
+      "question": "What is the primary role of the 'Residual Graph' in Ford-Fulkerson?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "To store the final flow values",
+        "b": "To identify augmenting paths by showing remaining capacities",
+        "c": "To visualize the physical layout of the nodes",
+        "d": "To calculate the shortest path between any two nodes"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Incorrect. The final flow is stored in the original graph edges.",
+        "b": "Correct! It shows how much more flow can be sent or redirected.",
+        "c": "Incorrect. Layout is independent of the residual logic.",
+        "d": "Incorrect. While BFS finds the shortest path in the residual graph, the graph's role is broader."
       },
-      "correctAnswer": "a",
-      "difficulty": "beginner"
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
     },
     {
-      "question": "This is a Sample Question 2?",
+      "question": "In the residual graph, what does a backward edge (v, u) represent?",
       "answers": {
-        "a": "answer1",
-        "b": "answer2",
-        "c": "answer3",
-        "d": "answer4"
+        "a": "A mistake in the input graph",
+        "b": "The ability to 'undo' or reduce flow previously sent from u to v",
+        "c": "An edge with negative capacity",
+        "d": "A path that only the sink can use"
       },
       "explanations": {
-        "a": "Explanation 1  <a href='www.google.com'>here</a>",
-        "b": "Explanation 2",
-        "c": "Explanation 2",
-        "d": "Explanation 2"
+        "a": "Incorrect. Backward edges are a required part of the algorithm's logic.",
+        "b": "Correct! They allow the algorithm to correct 'greedy' choices made in previous steps.",
+        "c": "Incorrect. Capacities in the residual graph are always non-negative.",
+        "d": "Incorrect. Any node in the path can use a backward edge."
+      },
+      "correctAnswer": "b",
+      "difficulty": "advanced"
+    },
+    {
+      "question": "How is the 'bottleneck' capacity of an augmenting path calculated?",
+      "answers": {
+        "a": "Max capacity in the path",
+        "b": "Average capacity of the path",
+        "c": "Minimum residual capacity of any edge in the path",
+        "d": "The capacity of the source node"
+      },
+      "explanations": {
+        "a": "Incorrect. A large edge cannot force more flow through a smaller subsequent edge.",
+        "b": "Incorrect. Average capacity does not respect the individual edge limits.",
+        "c": "Correct! The path's flow is limited by its 'thinnest' or weakest link.",
+        "d": "Incorrect. The bottleneck can occur anywhere in the path, not just at the source."
       },
       "correctAnswer": "c",
-      "difficulty": "beginner"
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "The Max-Flow Min-Cut Theorem states that:",
+      "answers": {
+        "a": "Max flow is always less than min cut",
+        "b": "Max flow value equals the capacity of the minimum cut",
+        "c": "Min cut is the sum of all source edges",
+        "d": "Max flow is equal to the number of edges"
+      },
+      "explanations": {
+        "a": "Incorrect. They are exactly equal at the optimum.",
+        "b": "Correct! This duality is the fundamental proof of the algorithm's optimality.",
+        "c": "Incorrect. The min cut can involve any set of edges that partitions the source and sink.",
+        "d": "Incorrect. Flow value is independent of the count of edges."
+      },
+      "correctAnswer": "b",
+      "difficulty": "advanced"
+    },
+    {
+      "question": "Why is BFS preferred over DFS in the Edmonds-Karp version of Ford-Fulkerson?",
+      "answers": {
+        "a": "BFS is easier to code",
+        "b": "BFS ensures the shortest augmenting path is found, guaranteeing polynomial time",
+        "c": "DFS cannot find the sink",
+        "d": "BFS uses less memory"
+      },
+      "explanations": {
+        "a": "Incorrect. Both are similar in complexity.",
+        "b": "Correct! Using BFS prevents the 'infinite' or exponential loop issues seen in DFS on certain graphs.",
+        "c": "Incorrect. Both algorithms can find the sink if a path exists.",
+        "d": "Incorrect. BFS typically uses more memory to maintain its queue."
+      },
+      "correctAnswer": "b",
+      "difficulty": "advanced"
+    },
+    {
+      "question": "When does the Ford-Fulkerson algorithm terminate?",
+      "answers": {
+        "a": "After 100 iterations",
+        "b": "When all edges have maximum flow",
+        "c": "When no more augmenting paths exist in the residual graph",
+        "d": "When the source node is deleted"
+      },
+      "explanations": {
+        "a": "Incorrect. It terminates based on logic, not a fixed count.",
+        "b": "Incorrect. Some edges may never reach full capacity.",
+        "c": "Correct! If no path exists from source to sink in the residual graph, no more flow can be sent.",
+        "d": "Incorrect. The source node is never deleted."
+      },
+      "correctAnswer": "c",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "What is the result of adding the bottleneck value to a forward edge in the residual graph?",
+      "answers": {
+        "a": "The residual capacity increases",
+        "b": "The residual capacity decreases (less available space)",
+        "c": "The capacity of the original graph increases",
+        "d": "The edge is removed"
+      },
+      "explanations": {
+        "a": "Incorrect. Sending flow uses up space.",
+        "b": "Correct! As flow is added, the available (residual) capacity for that direction decreases.",
+        "c": "Incorrect. Original capacities are fixed constants.",
+        "d": "Incorrect. The edge remains but its residual value changes."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "A 'Cut' in a flow network is a partition of nodes into two sets, S and T, such that:",
+      "answers": {
+        "a": "All edges are in S",
+        "b": "The source is in S and the sink is in T",
+        "c": "All nodes are in T",
+        "d": "S and T are identical"
+      },
+      "explanations": {
+        "a": "Incorrect. A cut must partition the nodes.",
+        "b": "Correct! This specific partition allows us to measure the flow across the 'gap' between source and sink.",
+        "c": "Incorrect. This wouldn't be a cut of the source-sink flow.",
+        "d": "Incorrect. S and T must be disjoint sets."
+      },
+      "correctAnswer": "b",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "If the Max Flow is 50, and you find a cut with capacity 50, what can you conclude?",
+      "answers": {
+        "a": "There is a smaller cut somewhere",
+        "b": "This is a minimum cut",
+        "c": "The algorithm has a bug",
+        "d": "The flow can be increased further"
+      },
+      "explanations": {
+        "a": "Incorrect. Cut capacity cannot be less than the max flow.",
+        "b": "Correct! Since flow value = cut capacity, this cut must be the minimum.",
+        "c": "Incorrect. This is the expected result of the Max-Flow Min-Cut theorem.",
+        "d": "Incorrect. You cannot push more flow than the capacity of the smallest cut."
+      },
+      "correctAnswer": "b",
+      "difficulty": "advanced"
+    },
+    {
+      "question": "What happens to the total flow value if you push 5 units through a backward edge in the residual graph?",
+      "answers": {
+        "a": "Total flow increases by 5",
+        "b": "Total flow decreases by 5",
+        "c": "Total flow remains unchanged in that specific step, but it redirects flow for a future increase",
+        "d": "The source stops producing flow"
+      },
+      "explanations": {
+        "a": "Incorrect. Pushing through a backward edge is a redirection, not a direct addition.",
+        "b": "Incorrect. The algorithm only augments flow to increase the total.",
+        "c": "Correct! Pushing flow backward 'cancels' existing flow to open up a better overall path, eventually increasing the total flow.",
+        "d": "Incorrect. The source continues until no paths exist."
+      },
+      "correctAnswer": "c",
+      "difficulty": "advanced"
     }
   ]
 }
