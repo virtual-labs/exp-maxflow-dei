@@ -1,0 +1,171 @@
+{
+  "version": 2.0,
+  "questions": [
+    {
+      "question": "In a flow network, what does the 'Capacity Constraint' imply for any edge (u, v)?",
+      "answers": {
+        "a": "The flow must be equal to the capacity",
+        "b": "The flow must be greater than or equal to the capacity",
+        "c": "The flow cannot exceed the capacity of the edge",
+        "d": "The flow must be a prime number"
+      },
+      "explanations": {
+        "a": "Incorrect. Flow can be any value from 0 up to the capacity.",
+        "b": "Incorrect. Flow is limited by the physical capacity, not forced to exceed it.",
+        "c": "Correct! Flow f(u,v) must always satisfy 0 ≤ f(u,v) ≤ c(u,v).",
+        "d": "Incorrect. Flow is typically represented by real numbers or integers."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What is the 'Flow Conservation' rule for an intermediate node?",
+      "answers": {
+        "a": "Total incoming flow must equal total outgoing flow",
+        "b": "Incoming flow must be greater than outgoing flow",
+        "c": "All nodes must have at least one unit of flow",
+        "d": "Nodes store flow like a reservoir"
+      },
+      "explanations": {
+        "a": "Correct! Except for the source and sink, flow cannot 'leak' or 'accumulate' at a node.",
+        "b": "Incorrect. This would imply the node is consuming flow.",
+        "c": "Incorrect. Nodes can have zero flow passing through them.",
+        "d": "Incorrect. Nodes in this model do not store flow; they only redirect it."
+      },
+      "correctAnswer": "a",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "If the total flow leaving the source is 15 units, what must be the total flow entering the sink?",
+      "answers": {
+        "a": "It depends on the number of edges",
+        "b": "Exactly 15 units",
+        "c": "Less than 15 units due to friction",
+        "d": "At least 30 units"
+      },
+      "explanations": {
+        "a": "Incorrect. The network structure doesn't change the conservation of total flow.",
+        "b": "Correct! Due to conservation, whatever leaves the source must eventually arrive at the sink.",
+        "c": "Incorrect. We assume an ideal network without 'leakage' or losses.",
+        "d": "Incorrect. Flow cannot be created within the intermediate nodes."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "Which of the following best describes a 'Source' node in a flow network?",
+      "answers": {
+        "a": "A node where all edges are incoming",
+        "b": "A node with no incoming edges (net producer of flow)",
+        "c": "A node that cannot be connected to the sink",
+        "d": "The node with the highest index"
+      },
+      "explanations": {
+        "a": "Incorrect. That describes a sink node.",
+        "b": "Correct! A source is where flow originates in the network.",
+        "c": "Incorrect. The source must have a path to the sink for flow to exist.",
+        "d": "Incorrect. Node indexing is arbitrary."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "In a directed graph used for flow networks, an edge (u, v) means:",
+      "answers": {
+        "a": "Flow can travel from u to v and v to u",
+        "b": "Flow can only travel from u to v",
+        "c": "u and v are the same node",
+        "d": "The edge has no capacity"
+      },
+      "explanations": {
+        "a": "Incorrect. That would be an undirected edge.",
+        "b": "Correct! Directionality is key to defining the path of the flow.",
+        "c": "Incorrect. (u, v) represents a connection between two distinct nodes.",
+        "d": "Incorrect. Every edge in a flow network must have a defined capacity."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "What happens if a node has more flow entering than leaving?",
+      "answers": {
+        "a": "It violates flow conservation (unless it is the sink)",
+        "b": "The extra flow is deleted",
+        "c": "The algorithm runs faster",
+        "d": "The node changes color"
+      },
+      "explanations": {
+        "a": "Correct! Conservation requires balance at all nodes except source and sink.",
+        "b": "Incorrect. Flow cannot be deleted in a standard model.",
+        "c": "Incorrect. Violating constraints leads to incorrect results.",
+        "d": "Incorrect. This is a logical error, not a visual feature."
+      },
+      "correctAnswer": "a",
+      "difficulty": "intermediate"
+    },
+    {
+      "question": "Can an edge have a negative capacity?",
+      "answers": {
+        "a": "Yes, for reverse flow",
+        "b": "No, capacity must be non-negative",
+        "c": "Only if the graph has cycles",
+        "d": "Only in the residual graph"
+      },
+      "explanations": {
+        "a": "Incorrect. Reverse flow is handled via the residual graph, not negative capacity.",
+        "b": "Correct! Capacity represents a physical limit, which cannot be less than zero.",
+        "c": "Incorrect. Complexity does not change the non-negativity rule.",
+        "d": "Incorrect. Residual capacities are also non-negative (c - f)."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "If an edge has a capacity of 10 and a current flow of 4, how much more flow can it handle?",
+      "answers": {
+        "a": "10 units",
+        "b": "4 units",
+        "c": "6 units",
+        "d": "14 units"
+      },
+      "explanations": {
+        "a": "Incorrect. 4 units are already in use.",
+        "b": "Incorrect. 4 is the current flow, not the remaining space.",
+        "c": "Correct! 10 (capacity) - 4 (current flow) = 6 units of remaining capacity.",
+        "d": "Incorrect. You cannot exceed the original capacity."
+      },
+      "correctAnswer": "c",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "The Maximum Flow problem is a classic problem in which field?",
+      "answers": {
+        "a": "Sorting algorithms",
+        "b": "Network Optimization",
+        "c": "Database normalization",
+        "d": "Operating system scheduling"
+      },
+      "explanations": {
+        "a": "Incorrect. Sorting deals with ordering data.",
+        "b": "Correct! It is a fundamental problem in combinatorial optimization and network theory.",
+        "c": "Incorrect. Databases focus on data structure and redundancy.",
+        "d": "Incorrect. Scheduling focuses on task timing."
+      },
+      "correctAnswer": "b",
+      "difficulty": "beginner"
+    },
+    {
+      "question": "True or False: A flow network can have multiple sources and sinks.",
+      "answers": {
+        "a": "True (they can be converted to a single source/sink model)",
+        "b": "False (only one of each is allowed)"
+      },
+      "explanations": {
+        "a": "Correct! Multiple sources/sinks can be handled by adding a 'super-source' and 'super-sink'.",
+        "b": "Incorrect. While the basic algorithm uses one of each, the model can be extended."
+      },
+      "correctAnswer": "a",
+      "difficulty": "intermediate"
+    }
+  ]
+}

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ford-Fulkerson Algorithm Visualizer</title>
+<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon">🌊</div>
+      <div class="logo-text">
+        <h1>Ford-Fulkerson Visualizer</h1>
+        <p>Maximum Flow Algorithm</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+        <div class="theme-toggle-slider">
+          <span id="themeIcon">☀️</span>
+        </div>
+      </div>
+      <div class="kbd-hint">
+        <kbd class="kbd">Space</kbd>
+        <span>Step</span>
+      </div>
+      <div class="kbd-hint">
+        <kbd class="kbd">A</kbd>
+        <span>Auto</span>
+      </div>
+      <div class="kbd-hint">
+        <kbd class="kbd">R</kbd>
+        <span>Reset</span>
+      </div>
+      <button class="header-btn" onclick="exportGraph()">
+        <span>💾</span>
+        <span>Export</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Metrics Banner (Above Canvas) -->
+  <div class="metrics-banner">
+    <div class="metric">
+      <div class="metric-icon">⚡</div>
+      <div class="metric-content">
+        <div class="metric-label">Max Flow</div>
+        <div class="metric-value" id="maxFlow">0</div>
+      </div>
+    </div>
+    <div class="metric">
+      <div class="metric-icon">🛤️</div>
+      <div class="metric-content">
+        <div class="metric-label">Paths Found</div>
+        <div class="metric-value" id="pathCount">0</div>
+      </div>
+    </div>
+    <div class="metric">
+      <div class="metric-icon">⏱️</div>
+      <div class="metric-content">
+        <div class="metric-label">Runtime</div>
+        <div class="metric-value"><span id="runtime">0</span>ms</div>
+      </div>
+    </div>
+    <div class="metric">
+      <div class="metric-icon">📊</div>
+      <div class="metric-content">
+        <div class="metric-label">Density</div>
+        <div class="metric-value"><span id="density">0</span>%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Left Panel: Input Controls -->
+  <div class="left-panel">
+    <!-- Presets -->
+    <div class="panel-section">
+      <div class="section-title">
+        <span class="section-icon">📚</span>
+        Preset Graphs
+      </div>
+      <div class="preset-grid">
+        <button class="preset-btn" onclick="loadPreset('simple')">Simple</button>
+        <button class="preset-btn" onclick="loadPreset('medium')">Medium</button>
+        <button class="preset-btn" onclick="loadPreset('complex')">Complex</button>
+        <button class="preset-btn" onclick="loadPreset('dense')">Dense</button>
+      </div>
+      <div class="random-section">
+        <button class="random-btn" onclick="generateRandom()">
+          🎲 Generate Random Graph
+        </button>
+        <div class="random-controls">
+          <div class="input-group">
+            <label class="input-label">Nodes</label>
+            <input type="number" class="input-field" id="randomNodes" value="6" min="3" max="12">
+          </div>
+          <div class="input-group">
+            <label class="input-label">Density</label>
+            <input type="number" class="input-field" id="randomDensity" value="40" min="20" max="80" step="10">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Custom Input -->
+    <div class="panel-section">
+      <div class="section-title">
+        <span class="section-icon">✏️</span>
+        Custom Input
+      </div>
+      <div class="input-tabs">
+        <button class="input-tab active" onclick="switchInputTab('simple')">Simple</button>
+        <button class="input-tab" onclick="switchInputTab('json')">JSON</button>
+        <button class="input-tab" onclick="switchInputTab('matrix')">Matrix</button>
+      </div>
+      
+      <!-- Simple Format -->
+      <div class="input-content active" id="simpleInput">
+        <textarea 
+          class="input-field" 
+          id="simpleText"
+          placeholder="s->a:10, s->b:5&#10;a->t:10, b->t:10"
+          rows="6"
+        ></textarea>
+        <div class="input-hint">Format: u->v:capacity (comma or newline separated)</div>
+      </div>
+      
+      <!-- JSON Format -->
+      <div class="input-content" id="jsonInput">
+        <textarea 
+          class="input-field" 
+          id="jsonText"
+          placeholder='{"nodes":["s","a","t"],"edges":[{"u":"s","v":"a","c":10}]}'
+          rows="6"
+        ></textarea>
+        <div class="input-hint">Standard JSON format</div>
+      </div>
+      
+      <!-- Matrix Format -->
+      <div class="input-content" id="matrixInput">
+        <textarea 
+          class="input-field" 
+          id="matrixText"
+          placeholder="0 10 5&#10;0 0 10&#10;0 0 0"
+          rows="6"
+        ></textarea>
+        <div class="input-hint">Capacity matrix (space-separated)</div>
+      </div>
+      
+      <button class="control-btn btn-primary" onclick="loadCustomGraph()" style="margin-top: 0.75rem;">
+        📥 Load Graph
+      </button>
+    </div>
+
+    <!-- Controls -->
+    <div class="panel-section">
+      <div class="section-title">
+        <span class="section-icon">🎮</span>
+        Controls
+      </div>
+      <div class="control-buttons">
+        <button class="control-btn btn-primary" id="initBtn" onclick="initialize()">
+          ▶️ Initialize
+        </button>
+        <button class="control-btn btn-secondary" id="stepBtn" onclick="step()" disabled>
+          ⏭️ Step Forward
+        </button>
+        <button class="control-btn btn-secondary" id="autoBtn" onclick="toggleAuto()" disabled>
+          ⏩ Auto Run
+        </button>
+        <button class="control-btn btn-danger" onclick="reset()">
+          🔄 Reset
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Canvas Container -->
+  <div class="canvas-container" id="canvasSection">
+    <div class="canvas-controls">
+      <button class="canvas-btn active" id="viewToggle" onclick="toggleView()">
+        <span>👁️</span>
+        <span id="viewText">Flow View</span>
+      </button>
+
+      <!-- Residual view legend — only visible in residual mode, sits beside the button -->
+      <div class="residual-info-panel" id="residualInfoPanel">
+        <div class="residual-legend-item">
+          <div class="residual-legend-line forward"></div>
+          <span>→ forward</span>
+        </div>
+        <div class="residual-legend-item">
+          <div class="residual-legend-line backward"></div>
+          <span>← pushback</span>
+        </div>
+      </div>
+    </div>
+    
+    <svg id="canvas"></svg>
+  </div>
+
+  <!-- Right Panel: Algorithm Status -->
+  <div class="right-panel">
+    <div class="panel-section">
+      <div class="section-title">
+        <span class="section-icon">🔄</span>
+        Algorithm Steps
+      </div>
+      <div class="algorithm-steps">
+        <div class="step active" data-step="1">
+          <div class="step-header">
+            <div class="step-number">1</div>
+            <div class="step-title">Initialize</div>
+          </div>
+          <div class="step-desc">Set all flows to 0, build residual graph</div>
+        </div>
+        <div class="step" data-step="2">
+          <div class="step-header">
+            <div class="step-number">2</div>
+            <div class="step-title">Find Path (BFS)</div>
+          </div>
+          <div class="step-desc">Search for augmenting path from source to sink</div>
+        </div>
+        <div class="step" data-step="3">
+          <div class="step-header">
+            <div class="step-number">3</div>
+            <div class="step-title">Calculate Bottleneck</div>
+          </div>
+          <div class="step-desc">Find minimum residual capacity along path</div>
+        </div>
+        <div class="step" data-step="4">
+          <div class="step-header">
+            <div class="step-number">4</div>
+            <div class="step-title">Augment Flow</div>
+          </div>
+          <div class="step-desc">Update flows and residual graph</div>
+        </div>
+        <div class="step" data-step="5">
+          <div class="step-header">
+            <div class="step-number">5</div>
+            <div class="step-title">Complete</div>
+          </div>
+          <div class="step-desc">No more augmenting paths exist</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="section-title">
+        <span class="section-icon">📝</span>
+        Execution Log
+      </div>
+      <div class="execution-log" id="logPanel">
+        <div class="log-entry info">
+          <span class="log-time">00:00</span>
+          <span class="log-message">System ready</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Path History Timeline (Below Canvas) -->
+  <div class="path-history-container">
+    <div class="path-history-header">
+      <span class="section-icon">🛤️</span>
+      Augmenting Paths Timeline
+    </div>
+    <div class="path-timeline" id="pathTimeline">
+      <div class="path-placeholder">
+        <div class="path-placeholder-icon">🔍</div>
+        <div>No paths found yet</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tooltip -->
+<div class="tooltip" id="tooltip"></div>
+
+<script src="js/main.js"></script>
+<script src="../assets/js/iframeResize.js"></script>
+        
+        </body>
+</html>
