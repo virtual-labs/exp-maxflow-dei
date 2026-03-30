@@ -46,11 +46,11 @@ Choose how augmenting paths will be discovered:
 1. **DFS (Depth-First Search)**: Original Ford–Fulkerson approach
 2. **BFS (Breadth-First Search)**: Edmonds–Karp variant with better complexity
 
-The selected method affects path discovery order and performance.
+BFS guarantees fewer augmenting paths in most cases and provides polynomial time complexity (O(VE²)), while DFS may require more augmenting paths and can take longer for certain network configurations.
 
 ## Step 5: Step Through the Algorithm
 
-1. Click **Step** to execute one iteration of the algorithm.
+1. Click **Step** to find and augment one augmenting path.
 2. Each step performs the following:
    - **Find Augmenting Path**: Highlights the path from source to sink in the residual graph
    - **Calculate Bottleneck**: Shows minimum residual capacity along the path

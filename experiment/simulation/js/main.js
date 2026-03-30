@@ -229,6 +229,14 @@ function loadCustomGraph() {
     
     loadGraph(graphData);
     showToast('Custom graph loaded', 'success');
+    
+    // Mobile: scroll to canvas after loading
+    if (window.innerWidth <= 768) {
+      setTimeout(() => {
+        const cs = document.getElementById('canvasSection');
+        if (cs) cs.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 200);
+    }
   } catch (error) {
     showToast('Error: ' + error.message, 'error');
     addLog('Error loading graph: ' + error.message, 'error');
@@ -379,6 +387,16 @@ function initialize() {
   renderGraph();
   addLog('Algorithm initialized', 'success');
   showToast('Algorithm ready', 'success');
+  
+  // On mobile: smoothly scroll the canvas into view after initializing
+  if (window.innerWidth <= 768) {
+    setTimeout(() => {
+      const canvasSection = document.getElementById('canvasSection');
+      if (canvasSection) {
+        canvasSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }, 150);
+  }
 }
 
 // Build Residual Graph
@@ -600,6 +618,12 @@ function reset() {
 function toggleView() {
   state.showFlow = !state.showFlow;
   document.getElementById('viewText').textContent = state.showFlow ? 'Flow View' : 'Residual View';
+  
+  const panel = document.getElementById('residualInfoPanel');
+  if (panel) {
+    panel.classList.toggle('visible', !state.showFlow);
+  }
+  
   renderGraph();
 }
 
@@ -911,9 +935,12 @@ if (isSaturated) g.classList.add('saturated');
   labelText.textContent = `${edge.flow}/${edge.capacity}`;
   labelText.setAttribute('fill', theme === 'dark' ? '#e2e8f0' : '#334155');
 } else {
-  const residual = state.residualGraph.get(edge.u)?.get(edge.v) || 0;
-  labelText.textContent = `r:${residual}`;
-  labelText.setAttribute('fill', theme === 'dark' ? '#e2e8f0' : '#334155');
+  // In residual view: show forward residual capacity on the forward label
+  const forwardResidual = state.residualGraph.get(edge.u)?.get(edge.v) ?? 0;
+  labelText.textContent = `→${forwardResidual}`;
+  labelText.setAttribute('fill', forwardResidual > 0
+    ? (theme === 'dark' ? '#93c5fd' : '#2563eb')   // blue = capacity available
+    : (theme === 'dark' ? '#94a3b8' : '#94a3b8'));  // grey = saturated
 }
     
     labelG.appendChild(labelText);
@@ -922,6 +949,89 @@ if (isSaturated) g.classList.add('saturated');
     canvas.appendChild(g);
   });
   
+  // ── RESIDUAL VIEW: draw backward edges to show pushback capacity ──────────
+  if (!state.showFlow && state.initialized) {
+    state.graph.edges.forEach(edge => {
+      const backwardResidual = state.residualGraph.get(edge.v)?.get(edge.u) ?? 0;
+      if (backwardResidual <= 0) return; // nothing to show
+      
+      const u = state.graph.nodes.find(n => n.id === edge.v); // reversed: draw from v back to u
+      const v = state.graph.nodes.find(n => n.id === edge.u);
+      if (!u || !v) return;
+      
+      const g = document.createElementNS(svgNS, "g");
+      g.classList.add('edge', 'backward-residual');
+      
+      // Curve in the opposite direction (offset the other way)
+      const midX = (u.x + v.x) / 2;
+      const midY = (u.y + v.y) / 2;
+      const dx = v.x - u.x;
+      const dy = v.y - u.y;
+      const len = Math.sqrt(dx * dx + dy * dy) || 1;
+      const offset = Math.min(40, len * 0.2); // larger offset so it doesn't overlap forward edge
+      // Offset perpendicular — opposite side from forward edge curve
+      const cx = midX + dy / len * offset;
+      const cy = midY - dx / len * offset;
+      
+      const path = document.createElementNS(svgNS, "path");
+      path.setAttribute('d', `M ${u.x} ${u.y} Q ${cx} ${cy} ${v.x} ${v.y}`);
+      path.setAttribute('fill', 'none');
+      path.setAttribute('stroke', theme === 'dark' ? '#fbbf24' : '#d97706'); // amber = pushback
+      path.setAttribute('stroke-width', '2');
+      path.setAttribute('stroke-dasharray', '6 3');
+      path.setAttribute('opacity', '0.75');
+      g.appendChild(path);
+      
+      // Arrow for backward edge
+      const t = 0.9;
+      const arrowX = (1-t)*(1-t)*u.x + 2*(1-t)*t*cx + t*t*v.x;
+      const arrowY = (1-t)*(1-t)*u.y + 2*(1-t)*t*cy + t*t*v.y;
+      const tangentX = -2*(1-t)*u.x + 2*(1-2*t)*cx + 2*t*v.x;
+      const tangentY = -2*(1-t)*u.y + 2*(1-2*t)*cy + 2*t*v.y;
+      const angle = Math.atan2(tangentY, tangentX);
+      const arrowSize = 9;
+      const arrow = document.createElementNS(svgNS, "path");
+      arrow.setAttribute('d', `
+        M ${arrowX} ${arrowY}
+        L ${arrowX - arrowSize*Math.cos(angle-Math.PI/6)} ${arrowY - arrowSize*Math.sin(angle-Math.PI/6)}
+        L ${arrowX - arrowSize*Math.cos(angle+Math.PI/6)} ${arrowY - arrowSize*Math.sin(angle+Math.PI/6)}
+        Z
+      `);
+      arrow.setAttribute('fill', theme === 'dark' ? '#fbbf24' : '#d97706');
+      g.appendChild(arrow);
+      
+      // Label: show backward residual value
+      const lx = 0.25*u.x + 0.5*cx + 0.25*v.x;
+      const ly = 0.25*u.y + 0.5*cy + 0.25*v.y;
+      
+      const lbg = document.createElementNS(svgNS, "rect");
+      lbg.setAttribute('x', lx - 22);
+      lbg.setAttribute('y', ly - 9);
+      lbg.setAttribute('width', 44);
+      lbg.setAttribute('height', 18);
+      lbg.setAttribute('rx', '4');
+      lbg.setAttribute('fill', theme === 'dark' ? 'rgba(30,41,59,0.95)' : 'rgba(255,255,255,0.95)');
+      lbg.setAttribute('stroke', theme === 'dark' ? '#92400e' : '#fcd34d');
+      lbg.setAttribute('stroke-width', '1');
+      g.appendChild(lbg);
+      
+      const lt = document.createElementNS(svgNS, "text");
+      lt.setAttribute('x', lx);
+      lt.setAttribute('y', ly);
+      lt.setAttribute('text-anchor', 'middle');
+      lt.setAttribute('dominant-baseline', 'middle');
+      lt.setAttribute('font-family', 'Courier New, monospace');
+      lt.setAttribute('font-size', '9');
+      lt.setAttribute('font-weight', '600');
+      lt.setAttribute('fill', theme === 'dark' ? '#fbbf24' : '#92400e');
+      lt.textContent = `←${backwardResidual}`;
+      g.appendChild(lt);
+      
+      canvas.appendChild(g);
+    });
+  }
+  // ─────────────────────────────────────────────────────────────────────────
+
   // Draw nodes
   state.graph.nodes.forEach((node, idx) => {
     const isSource = idx === 0;

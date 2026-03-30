@@ -180,12 +180,24 @@
   </div>
 
   <!-- Canvas Container -->
-  <div class="canvas-container">
+  <div class="canvas-container" id="canvasSection">
     <div class="canvas-controls">
       <button class="canvas-btn active" id="viewToggle" onclick="toggleView()">
         <span>👁️</span>
         <span id="viewText">Flow View</span>
       </button>
+
+      <!-- Residual view legend — only visible in residual mode, sits beside the button -->
+      <div class="residual-info-panel" id="residualInfoPanel">
+        <div class="residual-legend-item">
+          <div class="residual-legend-line forward"></div>
+          <span>→ forward</span>
+        </div>
+        <div class="residual-legend-item">
+          <div class="residual-legend-line backward"></div>
+          <span>← pushback</span>
+        </div>
+      </div>
     </div>
     
     <svg id="canvas"></svg>

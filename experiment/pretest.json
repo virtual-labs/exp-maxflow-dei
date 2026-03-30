@@ -108,7 +108,7 @@
       "answers": {
         "a": "Yes, for reverse flow",
         "b": "No, capacity must be non-negative",
-        "c": "Only if the graph is complex",
+        "c": "Only if the graph has cycles",
         "d": "Only in the residual graph"
       },
       "explanations": {

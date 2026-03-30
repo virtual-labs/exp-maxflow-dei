@@ -561,24 +561,28 @@ textarea.input-field {
   background: var(--bg-secondary);
   border-left: 1px solid var(--border-subtle);
   border-right: 1px solid var(--border-subtle);
-  position: relative;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
-/* Canvas Controls */
+/* Canvas Controls — single fixed-height bar, never overlaps SVG */
 .canvas-controls {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
+  flex-shrink: 0;
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0.75rem;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-subtle);
   z-index: 50;
+  flex-wrap: nowrap;
+  overflow: hidden;
 }
 
 .canvas-btn {
-  padding: 0.6rem 1rem;
+  padding: 0.5rem 0.9rem;
   background: var(--bg-tertiary);
-  backdrop-filter: blur(10px);
   border: 1px solid var(--border-medium);
   border-radius: 6px;
   color: var(--text-secondary);
@@ -589,6 +593,8 @@ textarea.input-field {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .canvas-btn:hover {
@@ -604,9 +610,10 @@ textarea.input-field {
 }
 
 #canvas {
+  flex: 1;
   width: 100%;
-  height: 100%;
   display: block;
+  min-height: 0;
 }
 
 /* Right Panel - Algorithm Status */
@@ -990,3 +997,227 @@ textarea.input-field {
   .app-container {
     grid-template-columns: 280px 1fr 260px;
   }
+}
+
+/* ============================================
+   MOBILE LAYOUT — phones only (≤ 768px)
+   Desktop grid is completely untouched above.
+   ============================================ */
+@media (max-width: 768px) {
+
+  /* Allow page to scroll vertically on mobile */
+  body {
+    height: auto;
+    overflow: auto;
+    overflow-x: hidden;
+  }
+
+  /* Stack everything vertically */
+  .app-container {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  /* Header: compress on mobile */
+  .header {
+    padding: 0 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    min-height: 56px;
+    height: auto;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  /* Hide keyboard hints on mobile — not useful on touch */
+  .kbd-hint {
+    display: none;
+  }
+
+  .logo-text h1 {
+    font-size: 0.95rem;
+  }
+
+  /* Metrics banner: 2x2 grid on mobile */
+  .metrics-banner {
+    order: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-left: none;
+    border-right: none;
+  }
+
+  .metric {
+    padding: 0.5rem 0.75rem;
+  }
+
+  .metric-icon {
+    font-size: 1.1rem;
+  }
+
+  .metric-value {
+    font-size: 1rem;
+  }
+
+  /* Left panel (inputs) goes on top */
+  .left-panel {
+    order: 1;
+    grid-column: unset;
+    grid-row: unset;
+    width: 100%;
+    overflow: visible;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  /* Canvas section in the middle */
+  .canvas-container {
+    order: 2;
+    grid-column: unset;
+    grid-row: unset;
+    width: 100%;
+    /* Fixed height so the SVG renders properly */
+    height: 70vw;
+    min-height: 300px;
+    max-height: 480px;
+    border-left: none;
+    border-right: none;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    /* Scroll target anchor */
+    scroll-margin-top: 8px;
+  }
+
+  /* Path timeline below canvas */
+  .path-history-container {
+    order: 3;
+    grid-column: unset;
+    grid-row: unset;
+    width: 100%;
+    border-left: none;
+    border-right: none;
+    overflow-x: auto;
+  }
+
+  /* Right panel (algorithm steps + log) at the bottom */
+  .right-panel {
+    order: 4;
+    grid-column: unset;
+    grid-row: unset;
+    width: 100%;
+    overflow: visible;
+    border-left: none;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  /* Make algorithm steps horizontal scrollable strip on mobile */
+  .algorithm-steps {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .step {
+    min-width: 130px;
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+
+  /* Control buttons: 2-column grid on mobile */
+  .control-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  /* Make preset grid 4 across on wide phones, 2 on narrow */
+  .preset-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (max-width: 420px) {
+    .preset-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  /* Execution log: limit height on mobile */
+  .execution-log {
+    max-height: 160px;
+  }
+}
+
+/* ============================================
+   RESIDUAL VIEW — backward edge styling
+   ============================================ */
+
+/* Backward residual edge (added via JS) */
+.edge.backward-residual path {
+  stroke-dasharray: 6 3;
+  opacity: 0.75;
+}
+
+.edge.backward-residual {
+  pointer-events: none;
+}
+
+/* Residual view legend — inline next to the toggle button */
+.residual-info-panel {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  border-left: 1px solid var(--border-subtle);
+  padding-left: 0.75rem;
+  overflow: hidden;
+  flex-shrink: 1;
+  min-width: 0;
+}
+
+.residual-info-panel.visible {
+  display: flex;
+}
+
+.residual-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+}
+
+.residual-legend-line {
+  width: 28px;
+  height: 2px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.residual-legend-line.forward {
+  background: var(--accent-primary);
+}
+
+.residual-legend-line.backward {
+  background: var(--accent-warning);
+  background: repeating-linear-gradient(
+    90deg,
+    var(--accent-warning) 0px,
+    var(--accent-warning) 4px,
+    transparent 4px,
+    transparent 7px
+  );
+  height: 2px;
+}
+
+.residual-legend-line.zero {
+  background: var(--text-muted);
+  opacity: 0.4;
+}

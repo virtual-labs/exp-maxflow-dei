@@ -104,18 +104,18 @@
       "difficulty": "intermediate"
     },
     {
-      "question": "What is the result of adding the bottleneck value to a forward edge in the residual graph?",
+      "question": "What happens to the residual capacity of a forward edge after flow is pushed through it?",
       "answers": {
         "a": "The residual capacity increases",
-        "b": "The residual capacity decreases (less available space)",
+        "b": "The residual capacity decreases (less room for additional flow)",
         "c": "The capacity of the original graph increases",
-        "d": "The edge is removed"
+        "d": "The edge is removed from the graph"
       },
       "explanations": {
-        "a": "Incorrect. Sending flow uses up space.",
-        "b": "Correct! As flow is added, the available (residual) capacity for that direction decreases.",
-        "c": "Incorrect. Original capacities are fixed constants.",
-        "d": "Incorrect. The edge remains but its residual value changes."
+        "a": "Incorrect. Sending flow uses up available capacity.",
+        "b": "Correct! As flow is pushed through a forward edge, the residual capacity decreases because there is less room for additional flow in that direction.",
+        "c": "Incorrect. Original capacities are fixed constants and do not change.",
+        "d": "Incorrect. The edge remains but its residual capacity changes."
       },
       "correctAnswer": "b",
       "difficulty": "intermediate"
@@ -155,20 +155,20 @@
       "difficulty": "advanced"
     },
     {
-      "question": "What happens to the total flow value if you push 5 units through a backward edge in the residual graph?",
+      "question": "What does pushing 5 units through a backward edge (v, u) in the residual graph mean in terms of the original network?",
       "answers": {
-        "a": "Total flow increases by 5",
-        "b": "Total flow decreases by 5",
-        "c": "Total flow remains unchanged in that specific step, but it redirects flow for a future increase",
+        "a": "5 new units of flow are added from v to u in the original network",
+        "b": "5 units of previously assigned flow on edge (u, v) are cancelled or rerouted",
+        "c": "The capacity of edge (v, u) increases by 5",
         "d": "The source stops producing flow"
       },
       "explanations": {
-        "a": "Incorrect. Pushing through a backward edge is a redirection, not a direct addition.",
-        "b": "Incorrect. The algorithm only augments flow to increase the total.",
-        "c": "Correct! Pushing flow backward 'cancels' existing flow to open up a better overall path, eventually increasing the total flow.",
-        "d": "Incorrect. The source continues until no paths exist."
+        "a": "Incorrect. Backward edges do not create new forward flow in the reverse direction.",
+        "b": "Correct! Pushing flow through a backward edge (v, u) effectively cancels or reroutes 5 units of flow that was previously sent from u to v, allowing the algorithm to find a better overall flow assignment.",
+        "c": "Incorrect. Original capacities are fixed and cannot be modified by the algorithm.",
+        "d": "Incorrect. The source continues producing flow until no augmenting paths remain."
       },
-      "correctAnswer": "c",
+      "correctAnswer": "b",
       "difficulty": "advanced"
     }
   ]

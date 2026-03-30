@@ -1,24 +1,23 @@
 ## References
 
 ## Books
-1. Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2009). *Introduction to Algorithms* (3rd ed.). MIT Press. (Chapter 15: Dynamic Programming)
-2. Gusfield, D. (1997). *Algorithms on Strings, Trees, and Sequences*. Cambridge University Press.
+1. Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2009). *Introduction to Algorithms* (3rd ed.). MIT Press. (Chapter 26: Maximum Flow)
+2. Ahuja, R. K., Magnanti, T. L., & Orlin, J. B. (1993). *Network Flows: Theory, Algorithms, and Applications*. Prentice Hall.
+3. Kleinberg, J., & Tardos, É. (2005). *Algorithm Design*. Pearson. (Chapter 7: Network Flow)
 
 ## Research Papers
-1. Hirschberg, D. S. (1975). A linear space algorithm for computing maximal common subsequences. *Communications of the ACM, 18*(6), 341-343.
-2. Needleman, S. B., & Wunsch, C. D. (1970). A general method applicable to the search for similarities in the amino acid sequence of two proteins. *Journal of Molecular Biology, 48*(3), 443-453.
+1. Ford, L. R., & Fulkerson, D. R. (1956). Maximal flow through a network. *Canadian Journal of Mathematics, 8*, 399–404.
+2. Edmonds, J., & Karp, R. M. (1972). Theoretical improvements in algorithmic efficiency for network flow problems. *Journal of the ACM, 19*(2), 248–264.
+3. Goldberg, A. V., & Tarjan, R. E. (1988). A new approach to the maximum-flow problem. *Journal of the ACM, 35*(4), 921–940.
 
-## Online Resources
-1. GeeksforGeeks - Longest Common Subsequence. https://www.geeksforgeeks.org/longest-common-subsequence-dp-4/
-2. Khan Academy - Dynamic Programming. https://www.khanacademy.org/computing/computer-science/algorithms
-3. Virtual Labs - DEI. https://www.vlab.co.in/
+## Online Video Lectures
 
-## Software and Tools
-1. Virtual Labs Platform - Dayalbagh Educational Institute
-2. Font Awesome Icons - https://fontawesome.com/
-3. JSON Validator - https://jsonlint.com/
+1. **NPTEL: Algorithmic Graph Theory and Data Structures**  
+   - Offered by: IIT Kharagpur  
+   - Instructor: Prof. Sourav Mukhopadhyay  
+   - Link: https://nptel.ac.in/courses/106105847  
 
-## Standards and Protocols
-1. FASTA format for biological sequences
-2. JSON format for data interchange
-3. HTML5/CSS3/ES6 for web standards
+2. **NPTEL (NOC): Design and Analysis of Algorithms**  
+   - Offered by: Chennai Mathematical Institute  
+   - Instructor: Prof. Madhavan Mukund  
+   - Link: https://nptel.ac.in/courses/106106131  
